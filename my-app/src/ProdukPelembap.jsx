@@ -1,26 +1,43 @@
-import React from 'react';
-import { IoMdArrowDropright } from 'react-icons/io';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Header from './components/HeaderAfterLogin';
+import Footer from './components/Footer';
 
-const ProdukPelembap = () => {
+const ProdukPelembab = () => {
+  const [produk, setProduk] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch data dari API
+    axios
+      .get('http://localhost:5000/api/produk') // Ganti dengan URL API Anda
+      .then((response) => {
+        // Filter hanya produk dengan id_jenis = 1
+        const filteredProduk = response.data.filter((item) => item.id_jenis === 2);
+        setProduk(filteredProduk);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (produk.length === 0) {
+    return <p>Tidak ada produk pelembab yang ditemukan.</p>;
+  }
+
   return (
-    <div className="profile-page">
-      <header>
-        <div className="logo">
-          <img src="/assets/images/logobesar.svg" alt="Logo Ayune" />
-        </div>
-        <nav>
-          <ul>
-            <li><Link to="/">BERANDA</Link></li>
-            <li><Link to="/AboutUs_Login">TENTANG KAMI</Link></li>
-            <li><Link to="/Produk">PRODUK</Link></li>
-            <li><Link to="/Ahli">KONSULTASI</Link></li>
-          </ul>
-        </nav>
-        <div className="auth-buttons">
-          <Link to="/profil"><button>Ayyunie</button></Link>
-        </div>
-      </header>
+    <div>
+      {/* Header */}
+      <Header />
+
+      {/* Konten Utama */}
       <div className='space-y-[30px] bg-white'>
         {/* Section Search Produk */}
         <section className='bg-[#E3F2ED] py-[5px]'>
@@ -28,177 +45,50 @@ const ProdukPelembap = () => {
             <p className='text-[#4A4A4A] text-[40px] font-bold'>PRODUK</p>
           </div>
         </section>
-        {/* Section Pelembap */}
+        {/* Section Produk Pembersih */}
         <section>
           <div className='flex justify-center px-[120px] py-[6px] bg-[#E3F2ED]'>
-            <p className='text-[#4A4A4A] text-[24px] font-bold'>Pelembap</p>
+            <p className='text-[#4A4A4A] text-[24px] font-bold'>Pelembab</p>
           </div>
-          <div className=''></div>
-          <div className='grid grid-cols-5 gap-x-[61px] gap-y-[10px] px-[120px]   py-[51px] bg-white'>
-            <Link to={'/Produk/Pelembap/Deskripsi'} className='space-y-[16px] '>
+          <div className='grid grid-cols-4 gap-6 px-[120px] py-[51px] bg-white'>
+            {produk.map((item) => (
+              <div
+                key={item.id}
+                style={{
+                  border: '1px solid #ccc',
+                  padding: '20px',
+                  borderRadius: '10px',
+                  backgroundColor: '#FFFFFF',
+                }}
+              >
                 <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/pelembap/youpelembap.png" alt="Y.O.U" />
+                  <Link to={`/produk/${item.id}`}>
+                    <img
+                      src={item.gambar}
+                      alt={item.nama_produk || 'Produk'}
+                      style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                      onError={(e) => {
+                        e.target.src = '/assets/images/default.png';
+                      }}
+                    />
+                  </Link>
                 </div>
                 <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>Y.O.U</p>
-                  <p>Acneplus Multi Action Cream</p>
-                  <p>Rp45.000 - Rp56.000</p>
+                  <p className='text-[#147A63] font-extrabold'>{item.nama_brand}</p>
+                  <p>{item.nama_produk}</p>
+                  <p>{item.kisaran_harga}</p>
                 </div>
-              </Link>
-              <Link to={'/Produk/Pelembap/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/pelembap/halepelembap.png" alt="HALE" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>HALE</p>
-                  <p>Fountain Of th</p>
-                  <p>Rp139.000 - Rp145.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Pelembap/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/pelembap/cetaphilpelembap.png" alt="CETAPHIL" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>CETAPHIL</p>
-                  <p>Moisturising Cream</p>
-                  <p>Rp360.000 - Rp375.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Pelembap/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/pelembap/gorjespelembap.png" alt="GORJES" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>GORJES</p>
-                  <p>Magnificent Ace Moisturizer</p>
-                  <p>Rp240.000 - Rp244.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Pelembap/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/pelembap/studiopelembap.png" alt="STUDIO TROPIK" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>STUDIO TROPIK</p>
-                  <p>Rich Skin Barrier Cream</p>
-                  <p>Rp199.000 - Rp219.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Pelembap/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/pelembap/halepelembap.png" alt="HALE" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>HALE</p>
-                  <p>All Rounder</p>
-                  <p>Rp110.000 - Rp130.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Pelembap/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/pelembap/g2gpelembap.png" alt="GLAD2GLOW" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>GLAD2GLOW</p>
-                  <p>Peach Retinol Moisturizer</p>
-                  <p>Rp48.000 - Rp54.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Pelembap/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/pelembap/g2gpelembap2.png" alt="GLAD2GLOW" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>GLAD2GLOW</p>
-                  <p>Kiwi 3D Acid Acne Moisturizer</p>
-                  <p>Rp48.000 - Rp54.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Pelembap/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/pelembap/eminapelembap.png" alt="EMINA" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>EMINA</p>
-                  <p>Bright Stuff Tone Up Cream</p>
-                  <p>Rp20.000 - Rp27.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Pelembap/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/pelembap/cetaphilpelembap2.png" alt="CETAPHIL" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>CETAPHIL</p>
-                  <p>Moisturizing Lotion</p>
-                  <p>Rp160.000 - Rp190.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Pelembap/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/pelembap/elvictopelembap.png" alt="ELVICTO" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>ELVICTO</p>
-                  <p>Barrier Up Moisturizer</p>
-                  <p>Rp77.000 - Rp100.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Pelembap/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/pelembap/bhumipelembap.png" alt="BHUMI" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>BHUMI</p>
-                  <p>G-Alpine Hydralock Moisturizer</p>
-                  <p>Rp183.000 - Rp220.000</p>
-                </div>
-              </Link>
+              </div>
+            ))}
           </div>
         </section>
       </div>
 
-      <footer className="aboutus-footer">
-        <div className="footer-separator"></div>
-        <div className="footer-container">
-          <div className="footer-logo">
-            <img src="/assets/images/logobesar.svg" alt="Logo Ayune" />
-          </div>
-          <div className="footer-content">
-            <div className="customer-care">
-              <h3>Layanan Pelanggan</h3>
-              <p>Whatsapp: +62-851-6564-4356</p>
-              <p>Instagram: @ayunneconsultation</p>
-              <p>Email: ayunneconsultation@gmail.com</p>
-              <p>
-                <strong>Jam operasional:</strong><br />
-                Senin-Jumat: 10:00 - 21:00 WIB<br />
-                Sabtu: 10:00 - 17:00 WIB
-              </p>
-            </div>
-            <div className="account">
-              <h3>Akun Saya</h3>
-              <p><Link to="/profil">Profil</Link></p>
-              <p><Link to="/signup">Daftar</Link></p>
-              <p><Link to="/login">Masuk</Link></p>
-            </div>
-            <div className="social-media">
-              <h3>Ikuti Kami:</h3>
-              <div className="social-icons">
-                <a href="#"><img src="/assets/images/instagram.png" alt="Instagram" /></a>
-                <a href="#"><img src="/assets/images/twt.png" alt="Twitter" /></a>
-                <a href="#"><img src="/assets/images/yt.png" alt="YouTube" /></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <p>©AYUNNE, 2024. ALL RIGHTS RESERVED</p>
-        </div>
-      </footer>
+      <div className='footer-separator'></div>
+      {/* Footer */}
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default ProdukPelembap
+export default ProdukPelembab;

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import './file_css/ChatPage.css';
+import Header from "./components/HeaderDokter";
+import Footer from "./components/FooterDokter";
+import FooterDokter from './components/FooterDokter';
 
 const socket = io('http://localhost:5000'); // Hubungkan ke backend di port 5000
 
@@ -31,9 +34,8 @@ const PasienKonsul = () => {
 
   return (
     <div className="chat-page">
-      <header>
-        <h1>Chat dengan Konsultan Dokter</h1>
-      </header>
+      {/* header */}
+      <Header /> 
       <div className="message-list">
         {messages.map((msg, index) => (
           <div key={index} className={`message ${msg.sender}`}>
@@ -50,6 +52,11 @@ const PasienKonsul = () => {
         />
         <button type="submit">Kirim</button>
       </form>
+
+      <div className="footer-separator"></div>
+      {/* Footer Dokter*/}
+      <FooterDokter />
+      
     </div>
   );
 };

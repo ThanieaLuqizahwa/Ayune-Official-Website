@@ -33,7 +33,6 @@ db.connect((err) => {
   console.log('Connected to database');
 });
 
-
 // Endpoint Signup
 app.post('/api/signup', (req, res) => {
   const { name, email, phone, password, confirmPassword, gender, birthdate } = req.body;
@@ -164,7 +163,6 @@ app.post('/api/users', (req, res) => {
   });
 });
 
-
 // Endpoint Mengedit data user
 app.put('/api/users/:id', (req, res) => {
   const { id } = req.params;
@@ -194,7 +192,6 @@ app.delete('/api/users/:id', (req, res) => {
   });
 });
 
-
 // Endpoint CRUD untuk tabel dokters
 
 // Menampilkan semua data dokter
@@ -209,7 +206,6 @@ app.get('/api/dokters', (req, res) => {
   });
 });
 
-
 // Menambah data dokter baru
 app.post('/api/dokters', (req, res) => {
   const { nama_dokter, gambar, bidang_dokter, riwayat_dokter, jadwal, harga_dokter, is_available, rating } = req.body;
@@ -222,7 +218,6 @@ app.post('/api/dokters', (req, res) => {
     res.status(201).json({ message: 'Dokter added successfully' });
   });
 });
-
 
 // Mengedit data dokter
 app.put('/api/dokters/:id', (req, res) => {
@@ -237,7 +232,6 @@ app.put('/api/dokters/:id', (req, res) => {
     res.status(200).json({ message: 'Dokter updated successfully' });
   });
 });
-
 
 // Menghapus data dokter
 app.delete('/api/dokters/:id', (req, res) => {
@@ -301,7 +295,6 @@ app.get('/api/masalah-kulit', (req, res) => {
   });
 });
 
-
 app.put('/api/produk/:id', (req, res) => {
   const { id } = req.params;
   const { id_brand, nama, id_kategori, kisaran_harga, id_tipe_kulit, id_masalah } = req.body;
@@ -321,7 +314,7 @@ app.put('/api/produk/:id', (req, res) => {
   });
 });
 
-//tambah produk
+// Tambah produk
 app.post('/api/produk', (req, res) => {
   const { id_brand, nama, id_kategori, kisaran_harga, id_tipe_kulit, id_masalah, gambar = '' } = req.body;
   console.log('POST /api/produk', req.body);
@@ -339,7 +332,6 @@ app.post('/api/produk', (req, res) => {
     res.status(201).json({ message: 'Produk added successfully' });
   });
 });
-
 
 // Menghapus data produk
 app.delete('/api/produk/:id', (req, res) => {
@@ -374,7 +366,7 @@ app.delete('/api/produk/:id', (req, res) => {
   });
 });
 
-// ambil data deskripsi di produk
+// Ambil data deskripsi di produk
 app.get('/api/produk/:id', (req, res) => {
   const { id } = req.params;
 
@@ -405,23 +397,62 @@ app.put('/api/produk/:id', (req, res) => {
   }
 
   const query = `
-    UPDATE produk 
-    SET deskripsi = ?, komposisi = ?, cara_pemakaian = ?, kisaran_harga = ?, link_shoppe = ?, link_tokopedia = ? 
-    WHERE id = ?`;
+  UPDATE produk 
+  SET deskripsi = ?, komposisi = ?, cara_pemakaian = ?, kisaran_harga = ?, link_shoppe = ?, link_tokopedia = ? 
+  WHERE id = ?`;
 
-  db.query(query, [deskripsi, komposisi, cara_pemakaian, kisaran_harga, link_shoppe, link_tokopedia, id], (err, result) => {
-    if (err) {
-      console.error('Error updating produk:', err);
-      return res.status(500).json({ message: 'Database error', error: err });
-    }
-    res.status(200).json({ message: 'Produk updated successfully' });
+db.query(query, [deskripsi, komposisi, cara_pemakaian, kisaran_harga, link_shoppe, link_tokopedia, id], (err, result) => {
+  if (err) {
+    console.error('Error updating produk:', err);
+    return res.status(500).json({ message: 'Database error', error: err });
+  }
+  res.status(200).json({ message: 'Produk updated successfully' });
+});
+});
+
+// Endpoint untuk mendapatkan data profil pengguna berdasarkan ID
+app.get('/api/user/profile/:id', (req, res) => {
+const userId = req.params.id;
+const query = 'SELECT * FROM users WHERE id = ?';
+db.query(query, [userId], (err, result) => {
+  if (err) {
+    console.error('Error fetching user profile:', err);
+    return res.status(500).json({ message: 'Database error', error: err });
+  }
+  if (result.length === 0) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+  res.status(200).json(result[0]);
+});
+});
+
+// Endpoint untuk memperbarui data profil pengguna
+app.post('/api/user/profile', (req, res) => {
+const { userId, id_tipe_kulit, id_masalah_kulit } = req.body;
+const query = 'UPDATE users SET id_tipe_kulit = ?, id_masalah_kulit = ? WHERE id = ?';
+db.query(query, [id_tipe_kulit, id_masalah_kulit, userId], (err, result) => {
+  if (err) {
+    console.error('Error updating user profile:', err);
+    return res.status(500).json({ message: 'Database error', error: err });
+  }
+  res.status(200).json({ message: 'Profile updated successfully' });
+});
+});
+
+// Mengambil produk dari database dan mengirimkan nama gambar ke frontend
+app.get('/api/produk', (req, res) => {
+  // Query database untuk mendapatkan produk
+  const query = 'SELECT * FROM produk';
+  db.query(query, (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: 'Gagal mengambil produk' });
+      }
+      res.json(results); // Mengirim data produk, termasuk URL gambar
   });
 });
 
 
-
-
 // Jalankan server
 server.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+console.log(`Server running on http://localhost:${PORT}`);
 });

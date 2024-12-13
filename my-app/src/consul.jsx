@@ -99,11 +99,11 @@ const Consul = () => {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                 />
-                <div id="cam-button">
+              </form>
+              <div id="cam-button">
                   <button type="button"><img src="assets/images/cam.png" alt="Camera" /></button>
                 </div>
                 <button type="submit"><img src="assets/images/send.png" alt="Send" /></button>
-              </form>
             </div>
           </div>
 
@@ -131,8 +131,18 @@ const Consul = () => {
                   <option value="combination">Kulit Kombinasi</option>
                 </select>
 
-                <label htmlFor="skin-concerns">Kondisi Kulit:</label>
-                <textarea name="skin-concerns" id="skin-concerns" placeholder="Masukkan Kondisi Kulit Anda sesuai dengan hasil Konsultasi"></textarea>
+                <label htmlFor="skin-type">Masalah Kulit</label>
+                <select name="skin-type" id="skin-type">
+                  <option value="">Pilih masalah kulit...</option>
+                  <option value="jerawat & komedo">Jerawat & Komedo</option>
+                  <option value="penuaan">Penuaan</option>
+                  <option value="pigmentasi">Pigmentasi</option>
+                  <option value="tekstur kulit">Tekstur Kulit</option>
+                  <option value="kering & sensitif">Kering & Sensitif</option>
+                  <option value="berminyak">Berminyak</option>
+                  <option value="kelamin">Kelamin</option>
+                  <option value="warna kulit">Warna Kulit</option>
+                </select>
 
                 <label htmlFor="age">Usia:</label>
                 <input type="text" id="age" placeholder="Masukkan Usia" />

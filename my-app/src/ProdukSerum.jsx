@@ -1,26 +1,43 @@
-import React from 'react';
-import { IoMdArrowDropright } from 'react-icons/io';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Header from './components/HeaderAfterLogin';
+import Footer from './components/Footer';
 
-const ProdukSerum = () => {
+const ProdukPelembab = () => {
+  const [produk, setProduk] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch data dari API
+    axios
+      .get('http://localhost:5000/api/produk') // Ganti dengan URL API Anda
+      .then((response) => {
+        // Filter hanya produk dengan id_jenis = 1
+        const filteredProduk = response.data.filter((item) => item.id_jenis === 4);
+        setProduk(filteredProduk);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (produk.length === 0) {
+    return <p>Tidak ada produk pelembab yang ditemukan.</p>;
+  }
+
   return (
-    <div className="profile-page">
-      <header>
-        <div className="logo">
-          <img src="/assets/images/logobesar.svg" alt="Logo Ayune" />
-        </div>
-        <nav>
-          <ul>
-            <li><Link to="/">BERANDA</Link></li>
-            <li><Link to="/AboutUs_Login">TENTANG KAMI</Link></li>
-            <li><Link to="/Produk">PRODUK</Link></li>
-            <li><Link to="/Ahli">KONSULTASI</Link></li>
-          </ul>
-        </nav>
-        <div className="auth-buttons">
-          <Link to="/profil"><button>Ayyunie</button></Link>
-        </div>
-      </header>
+    <div>
+      {/* Header */}
+      <Header />
+
+      {/* Konten Utama */}
       <div className='space-y-[30px] bg-white'>
         {/* Section Search Produk */}
         <section className='bg-[#E3F2ED] py-[5px]'>
@@ -28,177 +45,50 @@ const ProdukSerum = () => {
             <p className='text-[#4A4A4A] text-[40px] font-bold'>PRODUK</p>
           </div>
         </section>
-        {/* Section Serum */}
+        {/* Section Produk Pembersih */}
         <section>
           <div className='flex justify-center px-[120px] py-[6px] bg-[#E3F2ED]'>
             <p className='text-[#4A4A4A] text-[24px] font-bold'>Serum</p>
           </div>
-          <div className=''></div>
-          <div className='grid grid-cols-5 gap-x-[61px] gap-y-[10px] px-[120px]   py-[51px] bg-white'>
-          <Link to={'/Produk/Serum/Deskripsi'} className='space-y-[16px] '>
+          <div className='grid grid-cols-4 gap-6 px-[120px] py-[51px] bg-white'>
+            {produk.map((item) => (
+              <div
+                key={item.id}
+                style={{
+                  border: '1px solid #ccc',
+                  padding: '20px',
+                  borderRadius: '10px',
+                  backgroundColor: '#FFFFFF',
+                }}
+              >
                 <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/serum/g2gserum.png" alt="GLAD2GLOW" />
+                  <Link to={`/produk/${item.id}`}>
+                    <img
+                      src={item.gambar}
+                      alt={item.nama_produk || 'Produk'}
+                      style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                      onError={(e) => {
+                        e.target.src = '/assets/images/default.png';
+                      }}
+                    />
+                  </Link>
                 </div>
                 <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>GLAD2GLOW</p>
-                  <p>Yuja Symwhite 377 Dark Spot...</p>
-                  <p>Rp49.000 - Rp55.000</p>
+                  <p className='text-[#147A63] font-extrabold'>{item.nama_brand}</p>
+                  <p>{item.nama_produk}</p>
+                  <p>{item.kisaran_harga}</p>
                 </div>
-              </Link>
-              <Link to={'/Produk/Serum/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/serum/niveaserum.png" alt="NIVEA" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>NIVEA</p>
-                  <p>Luminous 630 Spotclear Intensive</p>
-                  <p>Rp335.000 - Rp350.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Serum/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/serum/somethincserum.png" alt="SOMETHINC" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>SOMETHINC</p>
-                  <p>Calm Down! Skinpair Barrier</p>
-                  <p>Rp139.000 - Rp145.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Serum/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/serum/firstserum.png" alt="FIRSTLAB" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>FIRSTLAB</p>
-                  <p>Probiotic Barrier Ampoule</p>
-                  <p>Rp283.000 - Rp300.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Serum/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/serum/jarkeenserum.png" alt="JARKEEN" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>JARKEEN</p>
-                  <p>Vit C Booster Serum</p>
-                  <p>Rp150.000 - Rp177.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Serum/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/serum/skintificserum.png" alt="SKINTIFIC" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>SKINTIFIC</p>
-                  <p>Retinol Skin Renewal Serum</p>
-                  <p>Rp129.000 - Rp154.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Serum/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/serum/skintificserum2.png" alt="SKINTIFIC" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>SKINTIFIC</p>
-                  <p>Lactic Acid Skin Renewal ...</p>
-                  <p>Rp129.000 - Rp154.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Serum/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/serum/wardahserum.png" alt="WARDAH" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>WARDAH</p>
-                  <p>Lightening Facial Serum</p>
-                  <p>Rp55.000 - Rp60.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Serum/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/serum/somethincserum2.png" alt="SOMETHINC" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>SOMETHINC</p>
-                  <p>BioSpicule Renewal Serume</p>
-                  <p>Rp75.000 - Rp80.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Serum/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/serum/theoriginoteserum.png" alt="THE ORIGINOTE" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>THE ORIGINOTE</p>
-                  <p>TXA 377 Dark Spot Serum</p>
-                  <p>Rp41.000 - Rp46.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Serum/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/serum/naturserum.png" alt="NATUR" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>NATUR</p>
-                  <p>Miracle Brightening Face Serum</p>
-                  <p>Rp170.000 - Rp180.000</p>
-                </div>
-              </Link>
-              <Link to={'/Produk/Serum/Deskripsi'} className='space-y-[16px] '>
-                <div className='flex justify-center'>
-                  <img className=' h-[261px] w-[261px] object-contain' src="/assets/images/serum/youserum.png" alt="YOU BEAUTY" />
-                </div>
-                <div className='text-[#4A4A4A] text-[12px]'>
-                  <p className='text-[#147A63] font-extrabold'>YOU BEAUTY</p>
-                  <p>AcnePlus Fine Pore Oil Control...</p>
-                  <p>Rp65.000 - Rp76.000</p>
-                </div>
-              </Link>
+              </div>
+            ))}
           </div>
         </section>
       </div>
 
-      <footer className="aboutus-footer">
-        <div className="footer-separator"></div>
-        <div className="footer-container">
-          <div className="footer-logo">
-            <img src="/assets/images/logobesar.svg" alt="Logo Ayune" />
-          </div>
-          <div className="footer-content">
-            <div className="customer-care">
-              <h3>Layanan Pelanggan</h3>
-              <p>Whatsapp: +62-851-6564-4356</p>
-              <p>Instagram: @ayunneconsultation</p>
-              <p>Email: ayunneconsultation@gmail.com</p>
-              <p>
-                <strong>Jam operasional:</strong><br />
-                Senin-Jumat: 10:00 - 21:00 WIB<br />
-                Sabtu: 10:00 - 17:00 WIB
-              </p>
-            </div>
-            <div className="account">
-              <h3>Akun Saya</h3>
-              <p><Link to="/profil">Profil</Link></p>
-              <p><Link to="/signup">Daftar</Link></p>
-              <p><Link to="/Login">Masuk</Link></p>
-            </div>
-            <div className="social-media">
-              <h3>Ikuti Kami:</h3>
-              <div className="social-icons">
-                <a href="#"><img src="/assets/images/instagram.png" alt="Instagram" /></a>
-                <a href="#"><img src="/assets/images/twt.png" alt="Twitter" /></a>
-                <a href="#"><img src="/assets/images/yt.png" alt="YouTube" /></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <p>©AYUNNE, 2024. ALL RIGHTS RESERVED</p>
-        </div>
-      </footer>
+      <div className='footer-separator'></div>
+      {/* Footer */}
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default ProdukSerum
+export default ProdukPelembab;
