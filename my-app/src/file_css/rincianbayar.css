@@ -115,14 +115,14 @@
     display: flex;
     justify-content: space-between;
     padding: 15px;
-    border-top: 5px solid #fff;
+    border-top: 5px solid #ffffff;
 }
 
 .rincianbayar-page .total-price {
     font-weight: bold;
     color: #3b3b3b;
     justify-content: space-between;
-    border-top: 5px solid #fff;
+    border-top: 5px solid #ffffff;
 }
 
 .rincianbayar-page .pay-button {

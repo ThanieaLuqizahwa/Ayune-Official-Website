@@ -206,6 +206,17 @@ app.get('/api/dokters', (req, res) => {
   });
 });
 
+// Menampilkan semua data dokter unutk ahli.jsx
+app.get("/api/dokters", (req, res) => {
+  const sql = "SELECT * FROM dokters";
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    res.json(result);
+  });
+});
+
 // Menambah data dokter baru
 app.post('/api/dokters', (req, res) => {
   const { nama_dokter, gambar, bidang_dokter, riwayat_dokter, jadwal, harga_dokter, is_available, rating } = req.body;

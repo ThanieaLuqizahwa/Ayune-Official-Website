@@ -116,6 +116,7 @@
     margin-left: auto;
 }
 
+/* Styling Input Box */
 .consul-page-container .input-box {
     display: flex;
     align-items: center;
@@ -123,10 +124,12 @@
     padding: 10px;
     border-radius: 10px;
     gap: 10px;
+    position: relative; /* Untuk memungkinkan kontrol posisi elemen dalam box */
 }
 
+/* Input Text */
 .consul-page-container .input-box input {
-    flex: 1;
+    flex: 1; /* Mengambil seluruh lebar yang tersisa */
     padding: 10px;
     border: 1px solid #ccc;
     outline: none;
@@ -134,18 +137,113 @@
     border-radius: 5px;
 }
 
-.consul-page-container .input-box button {
-    background-color: #147A63;
-    border: none;
-    padding: 10px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.3s;
+/* Kontainer Ikon */
+.consul-page-container .input-icons {
+    position: absolute; /* Mengatur ikon agar lebih fleksibel */
+    right: 10px; /* Jarak ikon ke sisi kanan */
+    display: flex;
+    gap: 10px; /* Jarak antara ikon */
+    align-items: center;
 }
 
-.consul-page-container .input-box button:hover {
-    background-color: #999;
+/* Tombol Kamera */
+.consul-page-container .camera-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
 }
+
+.consul-page-container .camera-button img {
+    width: 24px; /* Ukuran ikon */
+    height: 24px;
+    object-fit: cover;
+}
+
+/* Tombol Kirim */
+.consul-page-container .send-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.consul-page-container .send-button img {
+    width: 24px; /* Ukuran ikon */
+    height: 24px;
+    object-fit: cover;
+}
+
+
+/* Wrapper untuk ikon kamera dan pesawat */
+.consul-page-container .input-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Styling ikon kamera */
+.consul-page-container .input-icons .camera-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.consul-page-container .input-icons .camera-button:hover {
+    background-color: #d0d0d0;
+}
+
+.consul-page-container .input-icons .camera-button img {
+    width: 20px;
+    height: 20px;
+}
+
+/* Styling ikon pesawat */
+.consul-page-container .input-icons .send-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background-color: #147A63;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    color: white;
+}
+
+.consul-page-container .input-icons .send-button:hover {
+    background-color: #0d754b;
+}
+
+.consul-page-container .input-icons .send-button img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1); /* Ikon pesawat putih */
+}
+
+.consul-page-container .send-button {
+    background-color: #147A63;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .consul-page-container .send-button img {
+    filter: brightness(0) invert(1); /* Membuat ikon putih */
+  }
+  
+  .consul-page-container .send-button:hover {
+    background-color: #0d754b;
+  }
+  
 
 /* Doctor's Profile Section */
 .consul-page-container .profile-section {

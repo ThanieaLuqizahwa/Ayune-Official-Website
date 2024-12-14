@@ -98,7 +98,7 @@ header {
 }
 
 .opsibayar-page .grid-kiri{
-  display: grid;
+  display: grid; 
   text-align: left;
   margin-left: 150px;
 }
@@ -224,7 +224,7 @@ header {
 }
 
 .opsibayar-page .pay-button {
-  margin-left: 430px;
+  margin-left: 40px;
   background-color: #147A63;
   color: white;
   border: none;

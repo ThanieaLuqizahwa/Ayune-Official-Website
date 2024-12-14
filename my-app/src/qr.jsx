@@ -1,21 +1,23 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { usePayment } from "./PaymentContext";
+import { useLocation, useNavigate } from "react-router-dom"; // Gunakan useLocation untuk menerima data
 import Header from "./components/HeaderAfterLogin";
 import Footer from "./components/Footer";
 import "./file_css/qr.css";
 
-const qr = () => {
+const Qr = () => {
   const [showPopup, setShowPopup] = useState(false); // State untuk mengontrol pop-up
   const navigate = useNavigate();
-  const { totalPayment } = usePayment(); // Ambil totalPayment dari Context
+  const location = useLocation(); // Gunakan useLocation untuk mendapatkan data dari state
+
+  // Ambil totalPayment dari state (default 0 jika data tidak tersedia)
+  const totalPayment = location.state?.totalPayment || 0;
 
   const handleCopyClick = () => {
     setShowPopup(true); // Menampilkan pop-up
   };
 
   const handleRedirect = () => {
-    navigate("/consul"); // Mengarahkan ke halaman consul
+    navigate("/consul"); // Mengarahkan ke halaman konsultasi
   };
 
   return (
@@ -34,8 +36,8 @@ const qr = () => {
             <h2>Pembayaranmu</h2>
           </div>
           <div className="grid-kanan">
-          <h4>Rp {totalPayment.toLocaleString()}</h4>
-          <h2>Rp {totalPayment.toLocaleString()}</h2>
+            <h4>Rp {totalPayment.toLocaleString()}</h4>
+            <h2>Rp {totalPayment.toLocaleString()}</h2>
           </div>
         </div>
 
@@ -56,6 +58,7 @@ const qr = () => {
             SALIN BARCODE
           </button>
         </div>
+        <br></br>
       </main>
 
       {/* Popup */}
@@ -86,4 +89,4 @@ const qr = () => {
   );
 };
 
-export default qr;
+export default Qr;

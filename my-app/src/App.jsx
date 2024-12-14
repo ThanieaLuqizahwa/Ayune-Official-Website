@@ -44,6 +44,7 @@ import UlasanProduk from "./ulasan_produk.jsx";
 import HeaderDokter from "./components/HeaderDokter.jsx"
 import FooterDokter from "./components/FooterDokter.jsx"
 import ProdukList from "./components/produkList.jsx";
+import ProdukListRecom from "./components/produkListRecom.jsx";
 
 
 const App = () => {
@@ -99,6 +100,7 @@ const App = () => {
         <Route path="/HeaderDokter" element={<HeaderDokter />} />
         <Route path="/FooterDokter" element={<FooterDokter/>} />
         <Route path="/ProdukList" element={<ProdukList/>} />
+        <Route path="/ProdukListRecom" element= {<ProdukListRecom/>} />
         <Route
           path="/Datadokter"
           element={

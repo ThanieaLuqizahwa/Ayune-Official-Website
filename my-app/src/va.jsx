@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { usePayment } from "./PaymentContext";
+import { useNavigate, useLocation } from "react-router-dom"; // Gunakan useLocation untuk menerima data
 import Header from "./components/HeaderAfterLogin";
 import Footer from "./components/Footer";
 import "./file_css/va.css";
@@ -8,8 +7,11 @@ import "./file_css/va.css";
 const Va = () => {
   const [showPopup, setShowPopup] = useState(false); // State untuk mengontrol pop-up
   const [timeLeft, setTimeLeft] = useState(86400); // Set initial time for 24 hours in seconds
-  const { totalPayment } = usePayment(); // Ambil nilai totalPayment dari Context
   const navigate = useNavigate();
+  const location = useLocation(); // Gunakan useLocation untuk mendapatkan data dari state
+
+  // Ambil totalPayment dari state (default 0 jika data tidak tersedia)
+  const totalPayment = location.state?.totalPayment || 0;
 
   // Timer function to decrement time every second
   useEffect(() => {
@@ -83,6 +85,7 @@ const Va = () => {
             BAYAR
           </button>
         </div>
+        <br></br>
       </main>
 
       {/* Popup */}
