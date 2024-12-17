@@ -42,6 +42,9 @@ const LoginAdmin = () => {
               <Link to="#">DATA PRODUK</Link>
             </li>
             <li>
+              <Link to="#">DATA DESKRIPSI PRODUK</Link>
+            </li>
+            <li>
               <Link to="#">DATA DOKTER</Link>
             </li>
             <li>

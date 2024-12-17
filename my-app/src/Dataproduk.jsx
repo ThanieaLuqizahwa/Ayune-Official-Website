@@ -8,9 +8,10 @@ const DataProduk = () => {
   const [tipeKulit, setTipeKulit] = useState([]);
   const [masalahKulit, setMasalahKulit] = useState([]);
   const [formData, setFormData] = useState({
+    gambar: "",
     id_brand: "",
     nama: "",
-    id_kategori: "",
+    id_jenis: "",
     kisaran_harga: "",
     id_tipe_kulit: "",
     id_masalah: "",
@@ -24,7 +25,7 @@ const DataProduk = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      navigate("/LoginAdmin");
+      navigate("/Login");
     } else {
       fetchDataProduk();
       fetchTipeKulit();
@@ -34,45 +35,44 @@ const DataProduk = () => {
 
   const fetchDataProduk = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/produk');
+      const response = await fetch("http://localhost:5000/api/produk");
       if (response.ok) {
         const produk = await response.json();
         console.log("Fetched produk data:", produk); // Logging data yang diterima
         setDataProduk(produk);
       } else {
-        console.error('Failed to fetch produk:', response.statusText);
+        console.error("Failed to fetch produk:", response.statusText);
       }
     } catch (error) {
-      console.error('Error fetching produk:', error);
+      console.error("Error fetching produk:", error);
     }
   };
-  
 
   const fetchTipeKulit = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/tipe-kulit');
+      const response = await fetch("http://localhost:5000/api/tipe-kulit");
       if (response.ok) {
         const tipeKulitData = await response.json();
         setTipeKulit(tipeKulitData);
       } else {
-        console.error('Failed to fetch tipe kulit:', response.statusText);
+        console.error("Failed to fetch tipe kulit:", response.statusText);
       }
     } catch (error) {
-      console.error('Error fetching tipe kulit:', error);
+      console.error("Error fetching tipe kulit:", error);
     }
   };
 
   const fetchMasalahKulit = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/masalah-kulit');
+      const response = await fetch("http://localhost:5000/api/masalah-kulit");
       if (response.ok) {
         const masalahKulitData = await response.json();
         setMasalahKulit(masalahKulitData);
       } else {
-        console.error('Failed to fetch masalah kulit:', response.statusText);
+        console.error("Failed to fetch masalah kulit:", response.statusText);
       }
     } catch (error) {
-      console.error('Error fetching masalah kulit:', error);
+      console.error("Error fetching masalah kulit:", error);
     }
   };
 
@@ -94,54 +94,64 @@ const DataProduk = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setFormData({ ...formData, gambar: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAdd = async () => {
     const sanitizedFormData = {
       ...formData,
       id_brand: parseInt(formData.id_brand, 10),
-      id_kategori: parseInt(formData.id_kategori, 10),
+      id_jenis: parseInt(formData.id_jenis, 10),
       id_tipe_kulit: parseInt(formData.id_tipe_kulit, 10),
       id_masalah: parseInt(formData.id_masalah, 10),
-      gambar: formData.gambar || '', // tambahkan nilai kosong untuk gambar jika tidak ada
+      gambar: formData.gambar || "", // tambahkan nilai kosong untuk gambar jika tidak ada
     };
-  
+
     console.log("Adding produk with data:", sanitizedFormData); // Logging data sebelum menambah produk
     try {
-      const response = await fetch('http://localhost:5000/api/produk', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("http://localhost:5000/api/produk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(sanitizedFormData),
       });
-  
+
       if (response.ok) {
         fetchDataProduk();
         setFormData({
           id_brand: "",
           nama: "",
-          id_kategori: "",
+          id_jenis: "",
           kisaran_harga: "",
           id_tipe_kulit: "",
           id_masalah: "",
           gambar: "", // reset nilai gambar
         });
       } else {
-        console.error('Error adding produk:', response.statusText);
+        console.error("Error adding produk:", response.statusText);
       }
     } catch (error) {
-      console.error('Error adding produk:', error);
+      console.error("Error adding produk:", error);
     }
   };
-  
-  
 
   const handleEdit = (id) => {
     const produk = dataProduk.find((p) => p.id === id);
     setFormData({
       id_brand: produk.id_brand,
       nama: produk.nama_produk,
-      id_kategori: produk.id_kategori,
+      id_jenis: produk.id_jenis,
       kisaran_harga: produk.kisaran_harga,
       id_tipe_kulit: produk.id_tipe_kulit,
       id_masalah: produk.id_masalah,
+      gambar: produk.gambar,
     });
     setIsEditing(true);
     setEditId(id);
@@ -150,18 +160,22 @@ const DataProduk = () => {
   const handleUpdate = async () => {
     console.log("Updating produk with data:", formData); // Logging data sebelum permintaan
     try {
-      const response = await fetch(`http://localhost:5000/api/produk/${editId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-  
+      const response = await fetch(
+        `http://localhost:5000/api/produk/${editId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
+
       if (response.ok) {
         fetchDataProduk();
         setFormData({
+          gambar: "",
           id_brand: "",
           nama: "",
-          id_kategori: "",
+          id_jenis: "",
           kisaran_harga: "",
           id_tipe_kulit: "",
           id_masalah: "",
@@ -169,204 +183,245 @@ const DataProduk = () => {
         setIsEditing(false);
         setEditId(null);
       } else {
-        console.error('Error updating produk:', response.statusText);
+        console.error("Error updating produk:", response.statusText);
       }
     } catch (error) {
-      console.error('Error updating produk:', error);
+      console.error("Error updating produk:", error);
     }
   };
-  
-  
 
   const handleDelete = async (id) => {
     try {
       const response = await fetch(`http://localhost:5000/api/produk/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
-  
+
       if (response.ok) {
         fetchDataProduk();
       } else {
-        console.error('Error deleting produk:', response.statusText);
+        console.error("Error deleting produk:", response.statusText);
       }
     } catch (error) {
-      console.error('Error deleting produk:', error);
+      console.error("Error deleting produk:", error);
     }
-  };  
-  
+  };
 
-const handleSearch = (e) => {
-  setSearchTerm(e.target.value);
-};
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
 
-const filteredProduk = dataProduk.filter(
-  (produk) =>
-    produk.nama_produk.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    produk.nama_brand.toLowerCase().includes(searchTerm.toLowerCase())
-);
+  const filteredProduk = dataProduk.filter(
+    (produk) =>
+      produk.nama_produk.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      produk.nama_brand.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-// Function to get the name of the skin type by id
-const getTipeKulitName = (id) => {
-  const tipe = tipeKulit.find((t) => t.id === id);
-  return tipe ? tipe.nama_tipe : "";
-};
+  // Function to get the name of the skin type by id
+  const getTipeKulitName = (id) => {
+    const tipe = tipeKulit.find((t) => t.id === id);
+    return tipe ? tipe.nama_tipe : "";
+  };
 
-// Function to get the name of the skin issue by id
-const getMasalahKulitName = (id) => {
-  const masalah = masalahKulit.find((m) => m.id === id);
-  return masalah ? masalah.nama_masalah : "";
-};
+  // Function to get the name of the skin issue by id
+  const getMasalahKulitName = (id) => {
+    const masalah = masalahKulit.find((m) => m.id === id);
+    return masalah ? masalah.nama_masalah : "";
+  };
 
-return (
-  <AdminGuard>
-    <div className="data-page">
-      <header>
-        <div className="logo">
-          <img src="assets/images/logobesar.svg" alt="Logo Ayune" />
-        </div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/Dashboard">DASHBOARD</Link>
-            </li>
-            <li>
-              <Link to="/Dataproduk">DATA PRODUK</Link>
-            </li>
-            <li>
-              <Link to="/Datadokter">DATA DOKTER</Link>
-            </li>
-            <li>
-              <Link to="/Datauser">DATA USER</Link>
-            </li>
-          </ul>
-        </nav>
-        <div className="auth-buttons">
-          <button onClick={handleKeluar}>Keluar</button>
-        </div>
-      </header>
+  const getKategoriName = (id) => {
+    const kategori = {
+      1: "Pembersih",
+      2: "Pelembap",
+      3: "Toner",
+      4: "Serum",
+      5: "Sunscreen",
+      6: "Masker",
+    };
+    return kategori[id] || "Unknown";
+  };
 
-      <main>
-        <h1>Data Produk</h1>
-
-        <div className="search-bar">
-          <input
-            type="text"
-            placeholder="Cari nama produk..."
-            value={searchTerm}
-            onChange={handleSearch}
-            className="search-input"
-          />
-        </div>
-
-        <p>
-          Silakan kelola <strong>Data Produk</strong> dengan apik ya rek!
-        </p>
-        <div className="form-container">
-          <div className="input-group">
-            <input
-              type="text"
-              name="id_brand"
-              placeholder="Nama Brand"
-              value={formData.id_brand}
-              onChange={handleChange}
-            />
-            <input
-              type="text"
-              name="nama"
-              placeholder="Nama Produk"
-              value={formData.nama}
-              onChange={handleChange}
-            />
-            <input
-              type="text"
-              name="id_kategori"
-              placeholder="Kategori"
-              value={formData.id_kategori}
-              onChange={handleChange}
-            />
-            <input
-              type="text"
-              name="kisaran_harga"
-              placeholder="Harga"
-              value={formData.kisaran_harga}
-              onChange={handleChange}
-            />
-
-            <select
-              name="id_tipe_kulit"
-              value={formData.id_tipe_kulit}
-              onChange={handleChange}
-            >
-              <option value="1">Kulit kering</option>
-              <option value="2">Kulit kombinasi</option>
-              <option value="3">Kulit normal</option>
-              <option value="4">Kulit berminyak</option>
-              <option value="5">Kulit sensitif</option>
-            </select>
-            <select
-              name="id_masalah"
-              value={formData.id_masalah}
-              onChange={handleChange}
-            >
-              <option value="1">Jerawat & komedo</option>
-              <option value="2">Penuan</option>
-              <option value="3">Pigmentasi</option>
-              <option value="4">Tekstur kulit</option>
-              <option value="5">Kering & sensitif</option>
-            </select>
-            
+  return (
+    <AdminGuard>
+      <div className="data-page">
+        <header>
+          <div className="logo">
+            <img src="assets/images/logobesar.svg" alt="Logo Ayune" />
           </div>
+          <nav>
+            <ul>
+              <li>
+                <Link to="/Dashboard">DASHBOARD</Link>
+              </li>
+              <li>
+                <Link to="/Dataproduk">DATA PRODUK</Link>
+              </li>
+              <li>
+                <Link to="/Datadeskripsiproduk">DATA DESKRIPSI PRODUK</Link>
+              </li>
+              <li>
+                <Link to="/Datadokter">DATA DOKTER</Link>
+              </li>
+              <li>
+                <Link to="/Datauser">DATA USER</Link>
+              </li>
+            </ul>
+          </nav>
           <div className="auth-buttons">
-            <button onClick={isEditing ? handleUpdate : handleAdd}>
-              {isEditing ? "Update Data" : "Tambah Data +"}
-            </button>
+            <button onClick={handleKeluar}>Keluar</button>
           </div>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Nama Brand</th>
-              <th>Nama Produk</th>
-              <th>Kategori</th>
-              <th>Harga</th>
-              <th>Tipe Kulit</th>
-              <th>Masalah Kulit</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredProduk.map((produk, index) => (
-              <tr key={produk.id}>
-                <td>{index + 1}</td>
-                <td>{produk.nama_brand}</td>
-                <td>{produk.nama_produk}</td>
-                <td>{produk.nama_kategori}</td>
-                <td>{produk.kisaran_harga}</td>
-                <td>{getTipeKulitName(produk.id_tipe_kulit)}</td>
-                <td>{getMasalahKulitName(produk.id_masalah)}</td>
-                <td>
-                  <button onClick={() => handleEdit(produk.id)}>Edit</button>
-                  <button
-                    onClick={() => navigate(`/EditDeskripsiProduk/${produk.id}`)}
-                  >
-                    Edit Deskripsi Produk
-                  </button>
-                  <button
-                    className="delete-button"
-                    onClick={() => handleDelete(produk.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </main>
+        </header>
 
-      {/* Popup konfirmasi */}
-      {showPopup && (
+        <main>
+          <h1>Data Produk</h1>
+
+          <div className="search-bar">
+            <input
+              type="text"
+              placeholder="Cari nama produk..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="search-input"
+            />
+          </div>
+
+          <p>
+            Silakan kelola <strong>Data Produk</strong> dengan apik ya rek!
+          </p>
+          <div className="form-container">
+            <div className="input-group">
+              <input
+                type="file"
+                name="gambar"
+                accept="image/*"
+                onChange={handleFileUpload}
+              />
+              {formData.gambar && (
+                <img
+                  src={formData.gambar}
+                  alt="Preview"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    objectFit: "cover",
+                  }}
+                />
+              )}
+              <input
+                type="text"
+                name="id_brand"
+                placeholder="Nama Brand"
+                value={formData.id_brand}
+                onChange={handleChange}
+              />
+              <input
+                type="text"
+                name="nama"
+                placeholder="Nama Produk"
+                value={formData.nama}
+                onChange={handleChange}
+              />
+              <select
+                name="id_jenis"
+                value={formData.id_jenis}
+                onChange={handleChange}
+              >
+                <option value="1">Pembersih</option>
+                <option value="2">Pelembap</option>
+                <option value="3">Toner</option>
+                <option value="4">Serum</option>
+                <option value="5">Sunscreen</option>
+                <option value="6">Masker</option>
+              </select>
+              <input
+                type="text"
+                name="kisaran_harga"
+                placeholder="Harga"
+                value={formData.kisaran_harga}
+                onChange={handleChange}
+              />
+
+              <select
+                name="id_tipe_kulit"
+                value={formData.id_tipe_kulit}
+                onChange={handleChange}
+              >
+                <option value="1">Kulit kering</option>
+                <option value="2">Kulit kombinasi</option>
+                <option value="3">Kulit normal</option>
+                <option value="4">Kulit berminyak</option>
+                <option value="5">Kulit sensitif</option>
+              </select>
+              <select
+                name="id_masalah"
+                value={formData.id_masalah}
+                onChange={handleChange}
+              >
+                <option value="1">Jerawat & komedo</option>
+                <option value="2">Penuan</option>
+                <option value="3">Pigmentasi</option>
+                <option value="4">Tekstur kulit</option>
+                <option value="5">Kering & sensitif</option>
+              </select>
+            </div>
+            <div className="auth-buttons">
+              <button onClick={isEditing ? handleUpdate : handleAdd}>
+                {isEditing ? "Update Data" : "Tambah Data +"}
+              </button>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Gambar</th>
+                <th>Nama Brand</th>
+                <th>Nama Produk</th>
+                <th>Kategori</th>
+                <th>Harga</th>
+                <th>Tipe Kulit</th>
+                <th>Masalah Kulit</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredProduk.map((produk, index) => (
+                <tr key={produk.id}>
+                  <td>{index + 1}</td>
+                  <td>
+                    <img
+                      src={produk.gambar}
+                      alt={`Gambar ${produk.nama_produk}`}
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </td>
+                  <td>{produk.nama_brand}</td>
+                  <td>{produk.nama_produk}</td>
+                  <td>{getKategoriName(produk.id_jenis)}</td>
+                  <td>{produk.kisaran_harga}</td>
+                  <td>{getTipeKulitName(produk.id_tipe_kulit)}</td>
+                  <td>{getMasalahKulitName(produk.id_masalah)}</td>
+                  <td>
+                    <button onClick={() => handleEdit(produk.id)}>Edit</button>
+
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDelete(produk.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </main>
+
+        {/* Popup konfirmasi */}
+        {showPopup && (
           <div className="popup-overlay">
             <div className="popup-content">
               <div className="popup-header">Konfirmasi Keluar</div>
@@ -379,9 +434,9 @@ return (
           </div>
         )}
 
-      {/* Footer */}
-      <footer className="aboutus-footer">
-      <div className="footer-separator full-width"></div>
+        {/* Footer */}
+        <footer className="aboutus-footer">
+          <div className="footer-separator full-width"></div>
           <div className="footer-container">
             <div className="footer-logo">
               <img src="assets/images/logobesar.svg" alt="Logo Ayune" />
@@ -431,10 +486,10 @@ return (
           <div className="footer-bottom">
             <p>©AYUNNE, 2024. ALL RIGHTS RESERVED</p>
           </div>
-      </footer>
-    </div>
-  </AdminGuard>
-);
+        </footer>
+      </div>
+    </AdminGuard>
+  );
 };
 
 export default DataProduk;

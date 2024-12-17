@@ -77,14 +77,13 @@ const Ahli = () => {
                     }
                   }}
                   style={{
-                    cursor:
-                      dokter.is_available === 1 ? "pointer" : "not-allowed",
+                    cursor: dokter.is_available === 1 ? "pointer" : "not-allowed",
                     color: "#000",
                   }}
                 >
                   <img
                     className="expert-photo"
-                    src={dokter.gambar}
+                    src={`http://localhost/assets/images/${dokter.gambar}`}
                     alt={dokter.nama_dokter}
                     onClick={() => handleNavigate(dokter, "consul")} // Navigasi ke consul
                     style={{ cursor: "pointer" }}

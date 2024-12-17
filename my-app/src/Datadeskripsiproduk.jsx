@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./file_css/datadokter.css";
+import "./file_css/datadeskripsiproduk.css";
 import AdminGuard from "./AdminGuard";
 
-const Datadokter = () => {
-  const [dataDokter, setDataDokter] = useState([]);
+const Datadeskripsiproduk = () => {
+  const [dataProduk, setDataProduk] = useState([]);
+  const [tipeKulit, setTipeKulit] = useState([]);
+  const [masalahKulit, setMasalahKulit] = useState([]);
   const [formData, setFormData] = useState({
-    nama_dokter: "",
-    gambar: "",
-    bidang_dokter: "Kulit Sensitif",
-    riwayat_dokter: "",
-    jadwal: "",
-    harga_dokter: "",
-    is_available: 1,
-    rating: 0,
+    id_brand: "",
+    nama: "",
+    deskripsi: "",
+    komposisi: "",
+    cara_pemakaian: "",
+    kisaran_harga: "",
+    link_shopee: "",
+    link_tokopedia: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [isEditing, setIsEditing] = useState(false);
@@ -26,21 +28,52 @@ const Datadokter = () => {
     if (!token) {
       navigate("/Login");
     } else {
-      fetchDataDokter();
+      fetchDataProduk();
+      fetchTipeKulit();
+      fetchMasalahKulit();
     }
   }, [navigate]);
 
-  const fetchDataDokter = async () => {
+  const fetchDataProduk = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/dokters");
+      const response = await fetch("http://localhost:5000/api/produk");
       if (response.ok) {
-        const dokters = await response.json();
-        setDataDokter(dokters);
+        const produk = await response.json();
+        console.log("Fetched produk data:", produk); // Logging data yang diterima
+        setDataProduk(produk);
       } else {
-        console.error("Failed to fetch dokters:", response.statusText);
+        console.error("Failed to fetch produk:", response.statusText);
       }
     } catch (error) {
-      console.error("Error fetching dokters:", error);
+      console.error("Error fetching produk:", error);
+    }
+  };
+
+  const fetchTipeKulit = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/tipe-kulit");
+      if (response.ok) {
+        const tipeKulitData = await response.json();
+        setTipeKulit(tipeKulitData);
+      } else {
+        console.error("Failed to fetch tipe kulit:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching tipe kulit:", error);
+    }
+  };
+
+  const fetchMasalahKulit = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/masalah-kulit");
+      if (response.ok) {
+        const masalahKulitData = await response.json();
+        setMasalahKulit(masalahKulitData);
+      } else {
+        console.error("Failed to fetch masalah kulit:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching masalah kulit:", error);
     }
   };
 
@@ -50,7 +83,7 @@ const Datadokter = () => {
 
   const handleConfirmKeluar = () => {
     localStorage.removeItem("token");
-    navigate("/LoginAdmin");
+    navigate("/Login");
   };
 
   const handleCancelKeluar = () => {
@@ -62,56 +95,69 @@ const Datadokter = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setFormData({ ...formData, gambar: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleAdd = async () => {
+    const sanitizedFormData = {
+      ...formData,
+
+      id_brand: parseInt(formData.id_brand, 10),
+      deskripsi: (formData.deskripsi, 1000),
+      komposisi: (formData.komposisi, 1000),
+      cara_pemakaian: (formData.cara_pemakaian, 1000),
+      kisaran_harga: (formData.kisaran_harga, 1000),
+      link_shopee: (formData.link_shopee, 1000),
+      link_tokopedia: (formData.link_tokopedia, 1000),
+      gambar: formData.gambar || "", // tambahkan nilai kosong untuk gambar jika tidak ada
+    };
+
+    console.log("Adding produk with data:", sanitizedFormData); // Logging data sebelum menambah produk
     try {
-      const response = await fetch("http://localhost:5000/api/dokters", {
+      const response = await fetch("http://localhost:5000/api/produk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(sanitizedFormData),
       });
 
       if (response.ok) {
-        fetchDataDokter();
+        fetchDataProduk();
         setFormData({
-          nama_dokter: "",
-          gambar: "",
-          bidang_dokter: "Kulit Sensitif",
-          riwayat_dokter: "",
-          jadwal: "",
-          harga_dokter: "",
-          is_available: 1,
-          rating: 0,
+          id_brand: "",
+          nama: "",
+          deskripsi: "",
+          komposisi: "",
+          cara_pemakaian: "",
+          kisaran_harga: "",
+          link_shopee: "",
+          link_tokopedia: "",
         });
       } else {
-        console.error("Error adding dokter:", response.statusText);
+        console.error("Error adding produk:", response.statusText);
       }
     } catch (error) {
-      console.error("Error adding dokter:", error);
+      console.error("Error adding produk:", error);
     }
   };
 
   const handleEdit = (id) => {
-    const dokter = dataDokter.find((d) => d.id === id);
-    setFormData(dokter);
+    const produk = dataProduk.find((p) => p.id === id);
+    setFormData({
+      id_brand: produk.id_brand,
+      nama: produk.nama_produk,
+      deskripsi: produk.deskripsi,
+      komposisi: produk.komposisi,
+      cara_pemakaian: produk.cara_pemakaian,
+      kisaran_harga: produk.kisaran_harga,
+      link_shopee: produk.link_shopee,
+      link_tokopedia: produk.link_tokopedia,
+    });
     setIsEditing(true);
     setEditId(id);
   };
 
   const handleUpdate = async () => {
+    console.log("Updating produk with data:", formData); // Logging data sebelum permintaan
     try {
       const response = await fetch(
-        `http://localhost:5000/api/dokters/${editId}`,
+        `http://localhost:5000/api/produk/${editId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -120,40 +166,40 @@ const Datadokter = () => {
       );
 
       if (response.ok) {
-        fetchDataDokter();
+        fetchDataProduk();
         setFormData({
-          nama_dokter: "",
-          gambar: "",
-          bidang_dokter: "Kulit Sensitif",
-          riwayat_dokter: "",
-          jadwal: "",
-          harga_dokter: "",
-          is_available: 1,
-          rating: 0,
+          id_brand: "",
+          nama: "",
+          deskripsi: "",
+          komposisi: "",
+          cara_pemakaian: "",
+          kisaran_harga: "",
+          link_shopee: "",
+          link_tokopedia: "",
         });
         setIsEditing(false);
         setEditId(null);
       } else {
-        console.error("Error updating dokter:", response.statusText);
+        console.error("Error updating produk:", response.statusText);
       }
     } catch (error) {
-      console.error("Error updating dokter:", error);
+      console.error("Error updating produk:", error);
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/dokters/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/produk/${id}`, {
         method: "DELETE",
       });
 
       if (response.ok) {
-        fetchDataDokter();
+        fetchDataProduk();
       } else {
-        console.error("Error deleting dokter:", response.statusText);
+        console.error("Error deleting produk:", response.statusText);
       }
     } catch (error) {
-      console.error("Error deleting dokter:", error);
+      console.error("Error deleting produk:", error);
     }
   };
 
@@ -161,13 +207,27 @@ const Datadokter = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredDokter = dataDokter.filter((dokter) =>
-    dokter.nama_dokter.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProduk = dataProduk.filter(
+    (produk) =>
+      produk.nama_produk.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      produk.nama_brand.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Function to get the name of the skin type by id
+  const getTipeKulitName = (id) => {
+    const tipe = tipeKulit.find((t) => t.id === id);
+    return tipe ? tipe.nama_tipe : "";
+  };
+
+  // Function to get the name of the skin issue by id
+  const getMasalahKulitName = (id) => {
+    const masalah = masalahKulit.find((m) => m.id === id);
+    return masalah ? masalah.nama_masalah : "";
+  };
 
   return (
     <AdminGuard>
-      <div className="datadokters">
+      <div className="data-deskripsi">
         <header>
           <div className="logo">
             <img src="assets/images/logobesar.svg" alt="Logo Ayune" />
@@ -197,12 +257,12 @@ const Datadokter = () => {
         </header>
 
         <main>
-          <h1>Data Dokter</h1>
+          <h1>Data Deskripsi Produk</h1>
 
           <div className="search-bar">
             <input
               type="text"
-              placeholder="Cari nama dokter..."
+              placeholder="Cari nama produk..."
               value={searchTerm}
               onChange={handleSearch}
               className="search-input"
@@ -210,102 +270,65 @@ const Datadokter = () => {
           </div>
 
           <p>
-            Silakan kelola <strong>Data Dokter</strong> dengan apik ya rek!
+            Silakan kelola <strong>Data Deskripsi Produk</strong> dengan apik ya
+            rek!
           </p>
-
           <div className="form-container">
             <div className="input-group">
               <input
-                type="file"
-                name="gambar"
-                accept="image/*"
-                onChange={handleFileUpload}
-              />
-              {formData.gambar && (
-                <img
-                  src={formData.gambar}
-                  alt="Preview"
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    objectFit: "cover",
-                  }}
-                />
-              )}
-              <input
                 type="text"
-                name="nama_dokter"
-                placeholder="Nama Dokter"
-                value={formData.nama_dokter}
-                onChange={handleChange}
-              />
-              <select
-                name="bidang_dokter"
-                value={formData.bidang_dokter}
-                onChange={handleChange}
-              >
-                <option value="Spesialis Anti-aging">
-                  Spesialis Anti-aging
-                </option>
-                <option value="Spesialis Dermatovenereologi Estetika">
-                  Spesialis Dermatovenereologi Estetika
-                </option>
-                <option value="Spesialis Kulit & Kelamin">
-                  Spesialis Kulit & Kelamin
-                </option>
-                <option value="Spesialis Kulit Kusam, Pigmentasi">
-                  Spesialis Kulit Kusam, Pigmentasi
-                </option>
-                <option value="Spesialis Kulit Sensitif, Alergi">
-                  Spesialis Kulit Sensitif, Alergi
-                </option>
-                <option value="Spesialis Kulit Ibu Hamil, Stretch Mark">
-                  Spesialis Kulit Ibu Hamil, Stretch Mark
-                </option>
-                <option value="Spesialis jerawat, Bekas Jerawat">
-                  Spesialis jerawat, Bekas Jerawat
-                </option>
-                <option value="Spesialis Keloid, Bekas Luka">
-                  Spesialis Keloid, Bekas Luka
-                </option>
-                <option value="Spesialis Kulit Kusam & Penuaan Dini">
-                  Spesialis Kulit Kusam & Penuaan Dini
-                </option>
-              </select>
-              <input
-                type="text"
-                name="riwayat_dokter"
-                placeholder="Riwayat Dokter"
-                value={formData.riwayat_dokter}
+                name="id_brand"
+                placeholder="Nama Brand"
+                value={formData.id_brand}
                 onChange={handleChange}
               />
               <input
                 type="text"
-                name="jadwal"
-                placeholder="Jadwal"
-                value={formData.jadwal}
+                name="nama"
+                placeholder="Nama Produk"
+                value={formData.nama}
                 onChange={handleChange}
               />
               <input
                 type="text"
-                name="harga_dokter"
-                placeholder="Harga Dokter"
-                value={formData.harga_dokter}
+                name="deskripsi"
+                placeholder="Deskripsi"
+                value={formData.deskripsi}
                 onChange={handleChange}
               />
-              <select
-                name="is_available"
-                value={formData.is_available}
-                onChange={handleChange}
-              >
-                <option value={1}>Aktif</option>
-                <option value={0}>Tidak Aktif</option>
-              </select>
               <input
-                type="number"
-                name="rating"
-                placeholder="Rating"
-                value={formData.rating}
+                type="text"
+                name="komposisi"
+                placeholder="Komposisi"
+                value={formData.komposisi}
+                onChange={handleChange}
+              />
+              <input
+                type="text"
+                name="cara_pemakaian"
+                placeholder="Cara Pemakaian"
+                value={formData.cara_pemakaian}
+                onChange={handleChange}
+              />
+              <input
+                type="text"
+                name="kisaran_harga"
+                placeholder="Kisaran Harga"
+                value={formData.kisaran_harga}
+                onChange={handleChange}
+              />
+              <input
+                type="text"
+                name="link_shopee"
+                placeholder="Link Shopee"
+                value={formData.link_shopee}
+                onChange={handleChange}
+              />
+              <input
+                type="text"
+                name="link_tokopedia"
+                placeholder="Link Tokopedia"
+                value={formData.link_tokopedia}
                 onChange={handleChange}
               />
             </div>
@@ -315,53 +338,39 @@ const Datadokter = () => {
               </button>
             </div>
           </div>
-
           <table>
             <thead>
               <tr>
                 <th>No</th>
-                <th>Foto</th>
-                <th>Nama</th>
-                <th>Bidang</th>
-                <th>Riwayat</th>
-                <th>Rating</th>
-                <th>Jadwal</th>
-                <th>Harga</th>
-                <th>Status</th>
+                <th>Nama Brand</th>
+                <th>Nama Produk</th>
+                <th>Deskripsi</th>
+                <th>Komposisi</th>
+                <th>Cara Pemakaian</th>
+                <th>Kisaran Harga</th>
+                <th>Link Shopee</th>
+                <th>Link Tokopedia</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {filteredDokter.map((dokter, index) => (
-                <tr key={dokter.id}>
+              {filteredProduk.map((produk, index) => (
+                <tr key={produk.id}>
                   <td>{index + 1}</td>
+                  <td>{produk.nama_brand}</td>
+                  <td>{produk.nama_produk}</td>
+                  <td>{produk.deskripsi}</td>
+                  <td>{produk.komposisi}</td>
+                  <td>{produk.cara_pemakaian}</td>
+                  <td>{produk.kisaran_harga}</td>
+                  <td>{produk.link_shopee}</td>
+                  <td>{produk.link_tokopedia}</td>
                   <td>
-                    {dokter.gambar ? (
-                      <img
-                        src={dokter.gambar}
-                        alt={`Foto ${dokter.nama_dokter}`}
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ) : (
-                      "No Image"
-                    )}
-                  </td>
-                  <td>{dokter.nama_dokter}</td>
-                  <td>{dokter.bidang_dokter}</td>
-                  <td>{dokter.riwayat_dokter}</td>
-                  <td>{dokter.rating} ⭐</td> {/* Tampilkan rating */}
-                  <td>{dokter.jadwal}</td>
-                  <td>{dokter.harga_dokter}</td>
-                  <td>{dokter.is_available ? "Aktif" : "Tidak Aktif"}</td>
-                  <td>
-                    <button onClick={() => handleEdit(dokter.id)}>Edit</button>
+                    <button onClick={() => handleEdit(produk.id)}>Edit</button>
+
                     <button
                       className="delete-button"
-                      onClick={() => handleDelete(dokter.id)}
+                      onClick={() => handleDelete(produk.id)}
                     >
                       Delete
                     </button>
@@ -372,6 +381,7 @@ const Datadokter = () => {
           </table>
         </main>
 
+        {/* Popup konfirmasi */}
         {showPopup && (
           <div className="popup-overlay">
             <div className="popup-content">
@@ -385,6 +395,7 @@ const Datadokter = () => {
           </div>
         )}
 
+        {/* Footer */}
         <footer className="aboutus-footer">
           <div className="footer-separator full-width"></div>
           <div className="footer-container">
@@ -442,4 +453,4 @@ const Datadokter = () => {
   );
 };
 
-export default Datadokter;
+export default Datadeskripsiproduk;
