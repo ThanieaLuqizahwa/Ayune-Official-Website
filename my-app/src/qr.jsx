@@ -4,7 +4,7 @@ import Header from "./components/HeaderAfterLogin";
 import Footer from "./components/Footer";
 import "./file_css/qr.css";
 
-const Qr = () => {
+const QR = () => {
   const [showPopup, setShowPopup] = useState(false); // State untuk mengontrol pop-up
   const navigate = useNavigate();
   const location = useLocation(); // Gunakan useLocation untuk mendapatkan data dari state
@@ -89,4 +89,4 @@ const Qr = () => {
   );
 };
 
-export default Qr;
+export default QR;

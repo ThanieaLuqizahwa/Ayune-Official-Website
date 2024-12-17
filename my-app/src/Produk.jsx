@@ -3,7 +3,7 @@ import ProdukList from "./components/produkList";
 import Header from "./components/HeaderAfterLogin";
 import Footer from "./components/Footer";
 
-const App = () => {
+const Produk = () => {
   return (
     <div style={{ backgroundColor: "#FFFFFF" }}>
       <Header />
@@ -14,4 +14,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Produk;

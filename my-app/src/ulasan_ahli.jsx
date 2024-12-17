@@ -4,7 +4,7 @@ import Header from "./components/HeaderAfterLogin";
 import Footer from "./components/Footer";
 import './file_css/ulasan_ahli.css';
 
-const ulasan_ahli = () => {
+const Ulasan_Ahli = () => {
   return (
     <div className="ulasanahli_page">
       {/* header */}
@@ -60,4 +60,4 @@ const ulasan_ahli = () => {
   );
 };
 
-export default ulasan_ahli;
+export default Ulasan_Ahli;

@@ -63,7 +63,7 @@ const App = () => {
           <Route path="/Ahli" element={<Ahli />} />
           <Route path="/HomeAfterLogin" element={<HomeAfterLogin />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/Aboutus" element={<AboutUs />} />
           <Route path="/AboutUs_Login" element={<AboutUs_Login />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/profil" element={<Profil user={user} />} />{" "}
@@ -76,12 +76,12 @@ const App = () => {
           <Route path="/ProdukMasker" element={<ProdukMasker />} />
           <Route path="/ProdukPembersih" element={<ProdukPembersih />} />
           <Route path="/produk/:id" element={<DeskripsiProduk />} />
-          <Route path="/resetpass" element={<ResetPassword />} />{" "}
+          <Route path="/Resetpass" element={<ResetPassword />} />{" "}
           {/* Use uppercase component name */}
           <Route path="/forgotpass" element={<ForgotPass />} />{" "}
           {/* Use uppercase component name */}
           <Route path="/Opsi_Bayar" element={<Opsibayar />} />
-          <Route path="/Rincianbayar" element={<Rincianbayar />} />
+          <Route path="/rincianbayar" element={<Rincianbayar />} />
           <Route path="/qr" element={<QR />} />
           <Route path="/va" element={<VA />} />
           <Route path="/consul" element={<Consul />} />

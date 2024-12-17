@@ -3,7 +3,7 @@ import ProdukListRecom from "./components/produkListRecom";
 import Header from "./components/HeaderAfterLogin";
 import Footer from "./components/Footer";
 
-const App = () => {
+const Recom = () => {
   return (
     <div>
       <Header />
@@ -14,4 +14,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Recom;

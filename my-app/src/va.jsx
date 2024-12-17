@@ -4,7 +4,7 @@ import Header from "./components/HeaderAfterLogin";
 import Footer from "./components/Footer";
 import "./file_css/va.css";
 
-const Va = () => {
+const VA = () => {
   const [showPopup, setShowPopup] = useState(false); // State untuk mengontrol pop-up
   const [timeLeft, setTimeLeft] = useState(86400); // Set initial time for 24 hours in seconds
   const navigate = useNavigate();
@@ -116,4 +116,4 @@ const Va = () => {
   );
 };
 
-export default Va;
+export default VA;

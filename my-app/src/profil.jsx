@@ -4,7 +4,7 @@ import Header from "./components/HeaderAfterLogin";
 import Footer from "./components/Footer";
 import "./file_css/profil.css";
 
-const ProfilePage = ({ user }) => {
+const Profil = ({ user }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedSkinTypeId, setSelectedSkinTypeId] = useState("");
   const [selectedSkinProblemId, setSelectedSkinProblemId] = useState("");
@@ -251,4 +251,4 @@ const ProfilePage = ({ user }) => {
   );
 };
 
-export default ProfilePage;
+export default Profil;

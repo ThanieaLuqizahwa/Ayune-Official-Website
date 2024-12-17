@@ -4,7 +4,7 @@ import Header from "./components/HeaderAfterLogin";
 import Footer from "./components/Footer";
 import "./file_css/rincianbayar.css";
 
-const RincianBayar = () => {
+const Rincianbayar = () => {
   const location = useLocation();
   const navigate = useNavigate(); // Inisialisasi useNavigate
   const { dokter } = location.state || {}; // Mengambil data dokter dari state
@@ -78,6 +78,7 @@ const RincianBayar = () => {
               Bayar
             </button>
           </div>
+          
           <div className="footer-separator"></div>
           <Footer />
         </main>
@@ -86,4 +87,4 @@ const RincianBayar = () => {
   );
 };
 
-export default RincianBayar;
+export default Rincianbayar;

@@ -4,7 +4,7 @@ import Header from "./components/HeaderAfterLogin";
 import Footer from "./components/Footer";
 import './file_css/aboutus_login.css'; // Make sure the CSS path is correct
 
-const AboutUs = () => {
+const AboutUs_Login = () => {
   return (
     <div className="about-login-page-container">
       {/* header */}
@@ -46,4 +46,4 @@ const AboutUs = () => {
   );
 };
 
-export default AboutUs;
+export default AboutUs_Login;
